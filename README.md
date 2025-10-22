@@ -1,16 +1,22 @@
 # JSON IDL Code Generator
 
-This Rust application reads a JSON file and a Jinja template, then generates a text file using the minijinja template engine.
+This Rust application reads a JSON file and a Jinja templates, then generates a text file using the minijinja template engine.
 
 ## Usage
 
+Generate code using custom templates.
 ```
-cargo run -- <template.jinja> <input.json> <output.txt>
+json-idl-code-gen -t <templates> -i <input> -o <output>
 ```
 
-- `<template.jinja>`: Path to your Jinja template file
-- `<input.json>`: Path to your input JSON file
-- `<output.txt>`: Path to the output file to generate
+Generate code using internal templates.
+```
+json-idl-code-gen -i <input> -o <output>
+```
+
+- `<template>`: Folder path to your Jinja template files and config.yaml
+- `<input>`: File Path to your input JSON or YAML file
+- `<output>`: Folder path to the output folder to generate
 
 ## Dev Container
 
@@ -22,7 +28,7 @@ A `.devcontainer` is provided with Rust, rust-analyzer, and development tools pr
 
 ## Tasks
 - Build: `cargo build`
-- Run: `cargo run -- <template.jinja> <input.json> <output.txt>`
+- Run: `cargo run -- -t <templates> -i <input> -o <output>`
 
 ## License
-MIT
+[Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)
