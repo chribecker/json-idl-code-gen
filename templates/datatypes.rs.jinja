@@ -1,0 +1,58 @@
+/********************************************************************************
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ *
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+
+use std::default::Default;
+{% import "macros" as macros %}
+{% for en in ns.enumerations %}
+/*
+ * {{ en.description }}
+ */
+#[repr({{macros.to_rust_type(en.datatype)}})]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum {{ en.name }} {
+{% for lit in en.literals %}
+  {{lit.name }} = {{lit.value}},
+{% endfor %}
+}
+
+/* Default implementation for {{ en.name }} */
+impl Default for {{ en.name }} {
+    fn default() -> Self {
+        {{ en.name }}::{{ en.literals[0].name }}
+    }
+}
+
+{% endfor %}
+{% for str in ns.structs %}
+/*
+ * {{ str.description }}
+ */
+#[repr(C)]
+#[derive(Debug,Clone,Default)]
+pub struct {{ str.name }} {
+{% for member in str.members %}
+    pub {{member.name }}: {{macros.to_rust_type(member.datatype)}},
+{% endfor %}
+}
+
+mw_com::import_type!({{ns.name}}_{{str.name}}_type, crate::{{str.name}});
+
+{% endfor %}
+{% for intf in ns.interfaces %}
+mw_com::import_interface!({{ns.name}}_{{intf.name}}_interface, {{intf.name}}, {
+{% for ev in intf.events %}
+    {{ ev.name }}: Event<crate::{{ macros.to_rust_type(ev.datatype) }}>,
+{% endfor %}
+});
+
+{% endfor %}

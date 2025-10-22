@@ -1,0 +1,28 @@
+{
+    "name": "eclipse-s-core",
+    "image": "ghcr.io/eclipse-score/devcontainer:latest",
+    "initializeCommand": "mkdir -p ${localEnv:HOME}/.cache/bazel",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "rust-lang.rust-analyzer",
+                "ms-azuretools.vscode-containers",
+                "ms-vscode.cpptools-extension-pack",
+                "wholroyd.jinja",
+                "samuelcolvin.jinjahtml",
+                "vadimcn.vscode-lldb",
+                "fill-labs.dependi",
+                "tamasfe.even-better-toml"
+            ],
+            "settings": {
+                // Use generated rust-project.json from Bazel (rules_rust) and avoid invoking cargo on sysroot.
+                //"rust-analyzer.linkedProjects": ["${containerWorkspaceFolder}/rust-project.json"],
+                // Prevent rust-analyzer from trying to call cargo metadata for sysroot discovery when not needed.
+                //"rust-analyzer.cargo.useRustcWrapperForBuildScripts": false,
+                // Explicitly point to the host toolchain for std sources.
+                //"rust-analyzer.rustc.source": "discover"
+            }
+        }
+    },
+    "postCreateCommand": "rustup component add rustfmt clippy && cargo install cargo-watch"
+}

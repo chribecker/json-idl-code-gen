@@ -1,0 +1,67 @@
+{% set rust_type_map = {
+  'uint8':'u8',
+  'uint16':'u16',
+  'uint32':'u32',
+  'uint64':'u64',
+  'int8':'i8',
+  'int16':'i16',
+  'int32':'i32',
+  'int64':'i64',
+  'boolean':'bool',
+  'char':'char',
+  'float':'f32',
+  'double':'f64',
+  'string':'string',
+} %}
+{% set cpp_type_map = {
+  'uint8': 'std::uint8_t',
+  'uint16':'std::uint16_t',
+  'uint32':'std::uint32_t',
+  'uint64':'std::uint64_t',
+  'int8':'std::int8_t',
+  'int16':'std::int16_t',
+  'int32':'std::int32_t',
+  'int64':'std::int64_t',
+  'boolean':'bool',
+  'char':'char',
+  'float':'std::float',
+  'double':'std::double',
+  'string':'std::string',
+} %}
+{% set cpp_suffix_map = {
+  'uint8': 'U',
+  'uint16':'U',
+  'uint32':'U',
+  'uint64':'U',
+  'int8':'',
+  'int16':'',
+  'int32':'',
+  'int64':'',
+  'boolean':'',
+  'char':'',
+  'float':'f',
+  'double':'d',
+  'string':'',
+} %}
+
+{% macro to_rust_type(json_type) -%}
+    {%- if json_type in rust_type_map -%}
+        {{ rust_type_map[json_type] }}
+    {%- else -%}
+        {{ json_type }}
+    {%- endif -%}
+{%- endmacro %} 
+
+{% macro to_cpp_type(json_type) -%}
+    {%- if json_type in cpp_type_map -%}
+        {{ cpp_type_map[json_type] }}
+    {%- else -%}
+        {{ json_type }}
+    {%- endif -%}
+{%- endmacro %}
+
+{% macro to_cpp_suffix(json_type) -%}
+    {%- if json_type in cpp_suffix_map -%}
+        {{ cpp_suffix_map[json_type] }}
+    {%- endif -%}
+{%- endmacro %}
