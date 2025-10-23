@@ -12,7 +12,8 @@
                 "samuelcolvin.jinjahtml",
                 "vadimcn.vscode-lldb",
                 "fill-labs.dependi",
-                "tamasfe.even-better-toml"
+                "tamasfe.even-better-toml",
+                "bazelbuild.vscode-bazel"
             ],
             "settings": {
                 // Use generated rust-project.json from Bazel (rules_rust) and avoid invoking cargo on sysroot.

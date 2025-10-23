@@ -5,17 +5,19 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 use std::fs;
 use std::path::Path;
-#[cfg(test)]
 use similar_asserts::assert_eq;
+use std::env;
 
 // boolean constant to enable/disable expected file overwrite
 const OVERWRITE_EXPECTED: bool = false;
 
 #[test]
 fn test_main_generates_files() {
+    let bin = env::var("APP_BIN").expect("APP_BIN not set");
+    eprint!("Running test_main_generates_files {}\n", bin);
     let output_dir = "test_output";
     let _ = fs::remove_dir_all(output_dir); // Clean up before test
-    let mut cmd = Command::cargo_bin("json-idl-code-gen").unwrap();
+    let mut cmd = Command::new(bin);
     cmd.arg("-i")
         .arg("tests/car_window_types.yaml")
         .arg("-o")
@@ -55,7 +57,8 @@ fn test_main_generates_files() {
 
 #[test]
 fn test_main_fails_on_missing_input() {
-    let mut cmd = Command::cargo_bin("json-idl-code-gen").unwrap();
+    let bin = env::var("APP_BIN").expect("APP_BIN not set");
+    let mut cmd = Command::new(bin);
     cmd.arg("-i")
         .arg("test/does_not_exist.yaml")
         .arg("-o")

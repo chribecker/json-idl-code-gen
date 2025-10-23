@@ -1,0 +1,48 @@
+
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+"Code Generator from JSON IDL."
+module(
+	name = "json_idl_code_gen",
+	version = "0.1.0",
+)
+
+bazel_dep(name = "rules_rust", version = "0.66.0")
+
+##############################################################
+# Rust toolchain from original bazel examples
+##############################################################
+
+rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
+rust.toolchain(
+     edition = "2021",
+     versions = ["1.83.0"],
+)
+
+use_repo(rust, "rust_toolchains")
+
+##############################################################
+# Standard Bazel rust rules and crate dependencies
+##############################################################
+
+crate = use_extension("@rules_rust//crate_universe:extensions.bzl", "crate")
+
+crate.from_cargo(
+    name = "crates",
+    cargo_lockfile = "//:Cargo.lock",
+    manifests = ["//:Cargo.toml"],
+)
+use_repo(crate, "crates")
+
+##############################################################

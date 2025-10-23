@@ -2,7 +2,7 @@
 
 #![allow(dead_code)]
 
-use rust_embed::RustEmbed;
+use rust_embed::Embed;
 use serde_derive::Deserialize;
 use serde_json::Value;
 use std::fs;
@@ -23,9 +23,9 @@ pub struct Config {
 /*
  * Embedded templates using rust-embed
  */
-#[derive(RustEmbed)]
+#[derive(Embed)]
 #[folder = "templates/"]
-struct EmbeddedTemplates;
+pub struct EmbeddedTemplates;
 
 /// Load from external file if template folder is provided, otherwise load from embedded assets.
 pub fn load_template(template_folder: &Option<String>, name: &str) -> String {
@@ -58,7 +58,7 @@ pub fn load_config(template_folder: &Option<String>) -> Config {
 }
 
 pub fn load_input(input_path: &str) -> Value {
-    let input_str = fs::read_to_string(input_path).expect("Failed to read input file");
+    let input_str = fs::read_to_string(input_path).expect(format!("Failed to read input file: {}", input_path).as_str());
 
     let ext = Path::new(input_path)
         .extension()
@@ -69,8 +69,8 @@ pub fn load_input(input_path: &str) -> Value {
     print!("Input file extension: {}\n", ext);
 
     let json_data: Value = match ext.as_str() {
-        "json" => serde_json::from_str(&input_str).expect("Failed to parse JSON"),
-        "yaml" | "yml" => serde_yaml::from_str(&input_str).expect("Failed to parse YAML"),
+        "json" => serde_json::from_str(&input_str).expect(format!("Failed to parse JSON: {}", input_path).as_str()),
+        "yaml" | "yml" => serde_yaml::from_str(&input_str).expect(format!("Failed to parse YAML: {}", input_path).as_str()),
         _ => {
             eprintln!(
                 "Unsupported input file extension: {}. Use .json, .yaml, or .yml",
@@ -100,4 +100,22 @@ fn trim_last_linebreak(mut s: String) -> String {
         }
     }
     s
+}
+
+#[test]
+fn test_template_suffix_optional() {
+    let yaml = r#"
+    templates:
+      - file: "macros.jinja"
+        name: "macros.jinja"
+      - file: "datatypes.h.jinja"
+        name: "header_tpl"
+        suffix: "h"
+    "#;
+    let config: Config = serde_yaml::from_str(yaml).unwrap();
+    assert_eq!(config.templates.len(), 2);
+    assert_eq!(config.templates[0].name, "macros.jinja");
+    assert_eq!(config.templates[0].suffix, None);
+    assert_eq!(config.templates[1].name, "header_tpl");
+    assert_eq!(config.templates[1].suffix.as_deref(), Some("xh"));
 }

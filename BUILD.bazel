@@ -1,0 +1,75 @@
+load("@crates//:defs.bzl", "aliases", "all_crate_deps")
+
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library", "rust_test")
+
+filegroup(
+    name = "embed_templates",
+    srcs = glob(["templates/**"]),
+    visibility = ["//visibility:public"],
+)
+
+rust_library(
+    name = "app_lib",
+    srcs = ["src/fileio.rs"],
+    aliases = aliases(),
+    compile_data = [":embed_templates"],
+    edition = "2021",
+    proc_macro_deps = [
+        "@crates//:serde_derive",
+    ],
+    deps = all_crate_deps(normal = True),
+)
+
+rust_binary(
+    name = "app",
+    srcs = glob(["src/**/*.rs"]),
+    aliases = aliases(),
+    compile_data = [":embed_templates"],
+    edition = "2021",
+    proc_macro_deps = [
+        "@crates//:serde_derive",
+    ],
+    deps = all_crate_deps(normal = True),
+)
+
+rust_test(
+    name = "app_tests",
+    srcs = ["tests/main_tests.rs"],
+    data = glob([
+        "templates/**",
+        "tests/**",
+    ]) + ["//:app"],
+    deps = [
+        "@crates//:assert_cmd",
+        "@crates//:predicates",
+        "@crates//:similar-asserts",
+    ],
+    env = {
+        "APP_BIN": "$(rootpath //:app)",
+    },
+)
+
+rust_test(
+    name = "fileio_tests",
+    srcs = [
+        "src/fileio.rs",
+    ],
+    compile_data = [":embed_templates"],
+    proc_macro_deps = [
+        "@crates//:serde_derive",
+    ],
+    aliases = aliases(),
+    deps = all_crate_deps(normal = True)+ [ ":app_lib"    ],
+)

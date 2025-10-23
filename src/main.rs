@@ -1,6 +1,7 @@
 use clap::Parser;
 use minijinja::{context, Environment};
 use serde_json::Value;
+
 mod fileio;
 use fileio::Config;
 
@@ -15,7 +16,7 @@ fn generate_file(
         .render(context! { ns => ns })
         .expect("Failed to render template");
     println!(
-        "Generate File: {}/{}.{}",
+        "Generate File: {}/{}{}",
         output_dir,
         ns["name"].as_str().unwrap(),
         suffix

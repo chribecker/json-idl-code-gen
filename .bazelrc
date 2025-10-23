@@ -1,0 +1,4 @@
+# Enable Bzlmod (Bazel Modules)
+common --registry=https://raw.githubusercontent.com/eclipse-score/bazel_registry/refs/heads/main/
+common --registry=https://bcr.bazel.build
+
