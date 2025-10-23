@@ -17,13 +17,13 @@
             ],
             "settings": {
                 // Use generated rust-project.json from Bazel (rules_rust) and avoid invoking cargo on sysroot.
-                //"rust-analyzer.linkedProjects": ["${containerWorkspaceFolder}/rust-project.json"],
+                "rust-analyzer.linkedProjects": ["${containerWorkspaceFolder}/rust-project.json"],
                 // Prevent rust-analyzer from trying to call cargo metadata for sysroot discovery when not needed.
-                //"rust-analyzer.cargo.useRustcWrapperForBuildScripts": false,
+                "rust-analyzer.cargo.useRustcWrapperForBuildScripts": false,
                 // Explicitly point to the host toolchain for std sources.
-                //"rust-analyzer.rustc.source": "discover"
+                "rust-analyzer.rustc.source": "discover"
             }
         }
     },
-    "postCreateCommand": "rustup component add rustfmt clippy && cargo install cargo-watch"
+    "postCreateCommand": "rustup component add rustfmt clippy"
 }

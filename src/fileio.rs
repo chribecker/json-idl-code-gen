@@ -117,5 +117,5 @@ fn test_template_suffix_optional() {
     assert_eq!(config.templates[0].name, "macros.jinja");
     assert_eq!(config.templates[0].suffix, None);
     assert_eq!(config.templates[1].name, "header_tpl");
-    assert_eq!(config.templates[1].suffix.as_deref(), Some("xh"));
+    assert_eq!(config.templates[1].suffix.as_deref(), Some("h"));
 }
