@@ -71,13 +71,8 @@ pub fn load_input(input_path: &str) -> Value {
     let json_data: Value = match ext.as_str() {
         "json" => serde_json::from_str(&input_str).expect(format!("Failed to parse JSON: {}", input_path).as_str()),
         "yaml" | "yml" => serde_yaml::from_str(&input_str).expect(format!("Failed to parse YAML: {}", input_path).as_str()),
-        _ => {
-            eprintln!(
-                "Unsupported input file extension: {}. Use .json, .yaml, or .yml",
-                ext
-            );
-            std::process::exit(1);
-        }
+        _ => panic!("Unsupported input file extension: {}. Use .json, .yaml, or .yml", ext)
+        
     };
     json_data
 }

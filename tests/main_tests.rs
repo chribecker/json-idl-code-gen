@@ -13,7 +13,7 @@ const OVERWRITE_EXPECTED: bool = false;
 
 #[test]
 fn test_main_generates_files() {
-    let bin = env::var("APP_BIN").expect("APP_BIN not set");
+    let bin = env::var("COMGEN_BIN").expect("COMGEN_BIN not set");
     eprint!("Running test_main_generates_files {}\n", bin);
     let output_dir = "test_output";
     let _ = fs::remove_dir_all(output_dir); // Clean up before test
@@ -57,7 +57,7 @@ fn test_main_generates_files() {
 
 #[test]
 fn test_main_fails_on_missing_input() {
-    let bin = env::var("APP_BIN").expect("APP_BIN not set");
+    let bin = env::var("COMGEN_BIN").expect("COMGEN_BIN not set");
     let mut cmd = Command::new(bin);
     cmd.arg("-i")
         .arg("test/does_not_exist.yaml")

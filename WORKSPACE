@@ -10,3 +10,4 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+workspace(name = "rules_comgen")

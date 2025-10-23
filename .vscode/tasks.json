@@ -1,30 +1,28 @@
 {
   "version": "2.0.0",
   "tasks": [
-    // {
-    //   "label": "cargo build",
-    //   "type": "shell",
-    //   "command": "cargo build",
-    //   "group": "build",
-    //   "problemMatcher": ["$rustc"]
-    // },
-    // {
-    //   "label": "cargo run",
-    //   "type": "shell",
-    //   "command": "cargo run -- <input.json> <output.txt>",
-    //   "group": "test",
-    //   "problemMatcher": ["$rustc"]
-    // },
-    // {
-    //   "label": "cargo watch build",
-    //   "type": "shell",
-    //   "command": "cargo watch -x build",
-    //   "isBackground": true,
-    //   "problemMatcher": [],
-    //   "group": {
-    //     "kind": "build",
-    //     "isDefault": true
-    //   }
-    // }
+    {
+      "label": "Generate rust-project.json",
+      "command": "bazel",
+      "args": [
+        "run",
+        "@rules_rust//tools/rust_analyzer:gen_rust_project"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "never",
+        "panel": "dedicated"
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    }
   ]
 }

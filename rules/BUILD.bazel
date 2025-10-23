@@ -1,0 +1,7 @@
+load(":comgen_source.bzl", "comgen_source")
+
+comgen_source(
+    name = "example_comgen",
+    src = "car_window_types.yaml",
+    out_dir = "out",
+)

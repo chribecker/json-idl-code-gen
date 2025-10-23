@@ -21,8 +21,8 @@ filegroup(
 )
 
 rust_library(
-    name = "app_lib",
-    srcs = ["src/fileio.rs"],
+    name = "comgen_lib",
+    srcs = ["comgen/fileio.rs"],
     aliases = aliases(),
     compile_data = [":embed_templates"],
     edition = "2021",
@@ -33,8 +33,8 @@ rust_library(
 )
 
 rust_binary(
-    name = "app",
-    srcs = glob(["src/**/*.rs"]),
+    name = "comgen",
+    srcs = glob(["comgen/**/*.rs"]),
     aliases = aliases(),
     compile_data = [":embed_templates"],
     edition = "2021",
@@ -42,34 +42,35 @@ rust_binary(
         "@crates//:serde_derive",
     ],
     deps = all_crate_deps(normal = True),
+    visibility = ["//visibility:public"],
 )
 
 rust_test(
-    name = "app_tests",
+    name = "comgen_tests",
     srcs = ["tests/main_tests.rs"],
     data = glob([
         "templates/**",
         "tests/**",
-    ]) + ["//:app"],
+    ]) + ["//:comgen"],
     deps = [
         "@crates//:assert_cmd",
         "@crates//:predicates",
         "@crates//:similar-asserts",
     ],
     env = {
-        "APP_BIN": "$(rootpath //:app)",
+        "COMGEN_BIN": "$(rootpath //:comgen)",
     },
 )
 
 rust_test(
     name = "fileio_tests",
     srcs = [
-        "src/fileio.rs",
+        "comgen/fileio.rs",
     ],
     compile_data = [":embed_templates"],
     proc_macro_deps = [
         "@crates//:serde_derive",
     ],
     aliases = aliases(),
-    deps = all_crate_deps(normal = True)+ [ ":app_lib"    ],
+    deps = all_crate_deps(normal = True)+ [ ":comgen_lib"    ],
 )

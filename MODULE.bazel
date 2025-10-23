@@ -14,10 +14,12 @@
 
 "Code Generator from JSON IDL."
 module(
-	name = "json_idl_code_gen",
+	name = "rules_comgen",
 	version = "0.1.0",
+    compatibility_level = 1,
 )
 
+# Bazel dependencies
 bazel_dep(name = "rules_rust", version = "0.66.0")
 
 ##############################################################

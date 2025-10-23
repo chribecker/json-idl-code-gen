@@ -2,3 +2,4 @@
 /test_output
 /out
 /bazel-*
+/rust-project.json
