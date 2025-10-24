@@ -1,0 +1,85 @@
+name: carwindow
+major_version: 1
+minor_version: 0
+description: "Car window simulation example"
+
+namespaces:
+  - name: "car_window_types"
+    description: "Car window simulation example"
+
+    enumerations:
+      - name: WindowState
+        datatype: "uint32"
+        options:
+          - name: Stopped
+            value: 0
+          - name: Opening
+            value: 1
+          - name: Closing
+            value: 2
+          - name: Open
+            value: 3
+          - name: Closed
+            value: 4
+          - name: Shutdown
+            value: 5
+        description: "State of the car window"
+
+      - name: WindowCommand
+        datatype: "uint32"
+        options:
+          - name: Stop
+            value: 0
+          - name: Open
+            value: 1
+          - name: Close
+            value: 2
+          - name: Shutdown
+            value: 3
+        description: "Commands for the car window"
+
+    structs:
+      - name: WindowInfo
+        description: "Status of the car window"
+        members:
+          - name: state
+            datatype: WindowState
+            description: "Current state of the window"
+          - name: pos
+            datatype: uint32
+            description: "Position of the window (0% = closed, 100% = open)"
+
+      - name: WindowControl
+        description: "Control command for the car window"
+        members:
+          - name: command
+            datatype: WindowCommand
+            description: "Command to control the window"
+
+
+    namespaces:
+
+      - name: "CarWindowInfo"
+        description: "CarWindow Info Interface"
+        interface:
+          name: "/carwindow/WindowInfo"
+          events:
+            - name: window_info
+              description: "Event providing status information of the window"
+              input:
+                - name: window_info_
+                  datatype: WindowInfo
+                  description: "Status information of the window"
+
+
+      - name: CarWindowControl
+        description: "Control Interface for the car window simulation"
+        interface:
+          name: "/carwindow/WindowControl"
+          events:
+            - name: window_control
+              description: "Event providing control commands for the window"
+              input:
+                - name: window_control_
+                  datatype: WindowControl
+                  description: "Control command for the window"

@@ -1,0 +1,47 @@
+import std.uint32_t
+import carwindow.WindowControl
+import carwindow.WindowInfo
+
+// Car window simulation example
+package carwindow namespace carwindow {
+
+	// Possible states of the car window
+	enum WindowState of uint32_t {
+		Stopped = 0,
+		Opening = 1,
+		Closing = 2,
+		Open = 3,
+		Closed = 4,
+		Shutdown = 5
+	}
+
+	// Information about the car window
+	struct WindowInfo {
+		pos(tlvId:1) of uint32_t = 0
+		state(tlvId:2) of WindowState = Stopped
+	}
+
+	// Commands that can be sent to control the car window
+	enum WindowCommand of uint32_t {
+		Stop = 0,
+		Open = 1, 
+		Close = 2, 
+		Exit = 3
+	}
+
+	// Command structure to send control commands
+	struct WindowControl {
+		command of WindowCommand
+	}
+
+	// Car window control interface
+	interface CarWindowControl {
+		event window_control of WindowControl
+	}
+
+	// Car window information interface
+	interface CarWindowInfo {
+		event window_info of WindowInfo
+	}
+
+}
