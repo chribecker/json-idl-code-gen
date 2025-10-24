@@ -1,7 +1,18 @@
-load(":comgen_source.bzl", "comgen_source")
+load(":comgen_source.bzl", "comgen_source", "comgen_filter","comgen_debug")
 
 comgen_source(
     name = "example_comgen",
     src = "car_window_types.yaml",
-    out_dir = "out",
+    namespace = "example",
+)
+
+comgen_filter(
+    name = "example_comgen_rs",
+    comgen = ":example_comgen",
+    filter = "*.rs",
+)
+
+comgen_debug(
+    name = "example_comgen_rs_debug",
+    comgen = ":example_comgen_rs",
 )

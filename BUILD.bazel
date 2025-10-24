@@ -33,14 +33,35 @@ rust_library(
 )
 
 rust_binary(
-    name = "comgen",
-    srcs = glob(["comgen/**/*.rs"]),
+    name = "comgensource",
+    srcs = ["comgen/fileio.rs", "comgen/comgensource.rs"],
+    crate_root = "comgen/comgensource.rs",
     aliases = aliases(),
     compile_data = [":embed_templates"],
     edition = "2021",
     proc_macro_deps = [
         "@crates//:serde_derive",
     ],
+    deps = all_crate_deps(normal = True),
+    visibility = ["//visibility:public"],
+)
+
+rust_binary(
+    name = "comgenfilter",
+    srcs = ["comgen/comgenfilter.rs"],
+    crate_root = "comgen/comgenfilter.rs",
+    aliases = aliases(),
+    edition = "2021",
+    deps = all_crate_deps(normal = True),
+    visibility = ["//visibility:public"],
+)
+
+rust_binary(
+    name = "comgendebug",
+    srcs = ["comgen/comgendebug.rs"],
+    crate_root = "comgen/comgendebug.rs",
+    aliases = aliases(),
+    edition = "2021",
     deps = all_crate_deps(normal = True),
     visibility = ["//visibility:public"],
 )

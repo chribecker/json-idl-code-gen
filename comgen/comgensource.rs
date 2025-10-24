@@ -27,7 +27,12 @@ fn generate_file(
 /// Simple code generator using MiniJinja and JSON/YAML input
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
+#[command(name = "comgen")]
+#[command(about = "Code generator using MiniJinja and JSON/YAML input", long_about = None)]
 struct Args {
+    /// Template file name (must exist in embedded templates)
+    #[arg(short = 'n', long = "namespace", value_name = "NAMESPACE")]
+    ns_filter: Option<String>,
     /// Template file name (must exist in embedded templates)
     #[arg(short = 't', long = "template", value_name = "TEMPLATE")]
     template: Option<String>,
@@ -79,7 +84,15 @@ fn main() {
 
     // iterate over namespaces in json_data
     for ns in json_data["namespaces"].as_array().unwrap() {
-        println!("Generate Namespace: {}", ns["name"].as_str().unwrap());
+        let namespace = ns["name"].as_str().unwrap();
+        // if ns_filter is set, skip non-matching namespaces
+        if let Some(filter) = &args.ns_filter {
+            if filter != namespace {
+                println!("Skipping Namespace: {}", namespace);
+                continue;
+            }
+        }
+        println!("Generate files for Namespace: {}", namespace);
         // generate files for each template
         for (suffix, tpl) in templates.iter() {
             generate_file(ns, tpl, suffix, &args.output);
