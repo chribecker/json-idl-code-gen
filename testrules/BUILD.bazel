@@ -1,20 +1,48 @@
-load("//rules:comgen_source.bzl", "comgen_source", "comgen_filter","comgen_debug")
+load("//rules:comgen_source.bzl", "comgen_debug", "comgen_filter", "comgen_source")
 
 comgen_source(
     name = "example_comgen",
     src = "car_window_types.yaml",
-    namespace = "example",
+    namespace = "car_window_types",
 )
 
 comgen_filter(
-    name = "example_comgen_rs",
+    name = "example_comgen_cpp",
     comgen = ":example_comgen",
-    filter = "*.rs",
+    group = "cc_codegen_library_srcs",
+)
+
+comgen_filter(
+    name = "example_cc_comgen_lib",
+    comgen = ":example_comgen",
+    group = "cc_codegen_library_hdrs",
+)
+
+comgen_filter(
+    name = "example_cc_skeleton_lib",
+    comgen = ":example_comgen",
+    group = "cc_skeleton_library_srcs",
+)
+
+comgen_filter(
+    name = "example_rust_comgen_lib",
+    comgen = ":example_comgen",
+    group = "rust_codegen_library_srcs",
 )
 
 comgen_debug(
-    name = "example_comgen_rs_debug",
-    comgen = ":example_comgen_rs",
+    name = "example_comgen_debug",
+    srcs = [
+        ":example_comgen",
+    ],
 )
 
-
+comgen_debug(
+    name = "example_comgen_filter_debug",
+    srcs = [
+        ":example_comgen_cpp",
+        ":example_cc_comgen_lib",
+        ":example_cc_skeleton_lib",
+        ":example_rust_comgen_lib",
+    ],
+)

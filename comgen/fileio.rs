@@ -13,6 +13,7 @@ pub struct Template {
     pub file: String,
     pub name: String,
     pub suffix: Option<String>,
+    pub group: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -66,7 +67,7 @@ pub fn load_input(input_path: &str) -> Value {
         .unwrap_or("")
         .to_ascii_lowercase();
 
-    print!("Input file extension: {}\n", ext);
+    //print!("Input file extension: {}\n", ext);
 
     let json_data: Value = match ext.as_str() {
         "json" => serde_json::from_str(&input_str).expect(format!("Failed to parse JSON: {}", input_path).as_str()),
@@ -106,6 +107,7 @@ fn test_template_suffix_optional() {
       - file: "datatypes.h.jinja"
         name: "header_tpl"
         suffix: "h"
+        group: "cc_codegen_library_hdrs"
     "#;
     let config: Config = serde_yaml::from_str(yaml).unwrap();
     assert_eq!(config.templates.len(), 2);
@@ -113,4 +115,5 @@ fn test_template_suffix_optional() {
     assert_eq!(config.templates[0].suffix, None);
     assert_eq!(config.templates[1].name, "header_tpl");
     assert_eq!(config.templates[1].suffix.as_deref(), Some("h"));
+    assert_eq!(config.templates[1].group.as_deref(), Some("cc_codegen_library_hdrs"));
 }

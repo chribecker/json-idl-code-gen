@@ -1,19 +1,23 @@
 templates:
   - file: "macros.jinja"
     name: "macros"
+
   - file: "datatypes.h.jinja"
     name: "header_tpl"
     suffix: ".h"
-    group: "typeslib_h"
+    group: "cc_codegen_library_hdrs"
+
   - file: "datatypes.rs.jinja"
     name: "rust_tpl"
     suffix: ".rs"
-    group: "typeslib_rs"
+    group: "rust_codegen_library_srcs"
+
   - file: "datatypes.cpp.jinja"
     name: "cpp_tpl"
     suffix: ".cpp"
-    group: "typeslib_cpp"
+    group: "cc_codegen_library_srcs"
+
   - file: "datatypes.skeleton.cpp.jinja"
     name: "cpp_skeleton_tpl"
     suffix: "_skeleton.cpp"
-    group: "skeleton_cpp"
+    group: "cc_skeleton_library_srcs"

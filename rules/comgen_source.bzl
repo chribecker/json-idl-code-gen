@@ -8,7 +8,7 @@ def _com_gen_source_impl(ctx):
         arguments = [
             "--input", ctx.file.src.path,
             "--output", output_dir.path,
-            #"--namespace", ctx.attr.namespace,
+            "--namespace", ctx.attr.namespace,
         ],
         executable = ctx.executable._tool,
         mnemonic = "ComgenSource",
@@ -39,11 +39,11 @@ def _com_gen_filter_impl(ctx):
         arguments = [
             "--input", ctx.file.comgen.path,
             "--output", output_dir.path,
-            "--filter", ctx.attr.filter,
+            "--group", ctx.attr.group,
         ],
         executable = ctx.executable._tool,
         mnemonic = "ComgenFilter",
-        progress_message = "Filter files from %s: %s" % (ctx.file.comgen.path, ctx.attr.filter),
+        progress_message = "Filter files from %s: %s" % (ctx.file.comgen.path, ctx.attr.group),
     )
     return DefaultInfo(files = depset([output_dir]))
 
@@ -51,7 +51,7 @@ comgen_filter = rule(
     implementation = _com_gen_filter_impl,
     attrs = {
         "comgen": attr.label(allow_single_file = True, doc = "Reference to a comgen_source target"),
-        "filter": attr.string(doc = "namespace filter to use for generated code", default = ""),
+        "group": attr.string(doc = "group filter to use for generated code", default = ""),
         "_tool": attr.label(
             default = Label("//:comgenfilter"),
             executable = True,
@@ -63,24 +63,24 @@ comgen_filter = rule(
 
 def _com_gen_debug_impl(ctx):
     output_dir = ctx.actions.declare_file(ctx.label.name+".txt")
+    args =[]
+    args.extend(["--output", output_dir.path])
+    for src in ctx.files.srcs:
+        args.extend(["--input", src.path])
     ctx.actions.run(
-        inputs = [ctx.file.comgen],
+        inputs = ctx.files.srcs,
         outputs = [output_dir],
-        arguments = [
-            "--name", ctx.label.name,
-            "--input", ctx.file.comgen.path,
-            "--output", output_dir.path,
-        ],
+        arguments = args,
         executable = ctx.executable._tool,
-        mnemonic = "ComgenDebug",
-        progress_message = "Debug print files from %s" % (ctx.file.comgen.path),
+        mnemonic = "FileDebug",
+        progress_message = "Debug print files from %s" % (ctx.label.name),
     )
     return DefaultInfo(files = depset([output_dir]))
 
 comgen_debug = rule(
     implementation = _com_gen_debug_impl,
     attrs = {
-        "comgen": attr.label(allow_single_file = True, doc = "Reference to a comgen_source target"),
+        "srcs": attr.label_list( doc = "Reference to a comgen_source target"),
         "_tool": attr.label(
             default = Label("//:comgendebug"),
             executable = True,
@@ -90,4 +90,36 @@ comgen_debug = rule(
     },
 )
 
+def _cc_comgen_library_impl(ctx):
+    output = ctx.actions.declare_file(ctx.label.name+".txt")
+    return DefaultInfo(files = depset([output]))
+
+cc_comgen_library = rule(
+    implementation = _cc_comgen_library_impl,
+    attrs = {
+        "comgen": attr.label(allow_single_file = True, doc = "Reference to a comgen_source target"),
+    },
+)
+
+def _rust_comgen_library_impl(ctx):
+    output = ctx.actions.declare_file(ctx.label.name+".txt")
+    return DefaultInfo(files = depset([output]))
+
+rust_comgen_library = rule(
+    implementation = _rust_comgen_library_impl,
+    attrs = {
+        "comgen": attr.label(allow_single_file = True, doc = "Reference to a comgen_source target"),
+    },
+)
+
+def _cc_skeleton_library_impl(ctx):
+    output = ctx.actions.declare_file(ctx.label.name+".txt")
+    return DefaultInfo(files = depset([output]))
+
+cc_skeleton_library = rule(
+    implementation = _cc_skeleton_library_impl,
+    attrs = {
+        "comgen": attr.label(allow_single_file = True, doc = "Reference to a comgen_source target"),
+    },
+)
 

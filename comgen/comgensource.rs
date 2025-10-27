@@ -15,12 +15,6 @@ fn generate_file(
     let rendered = tpl
         .render(context! { ns => ns })
         .expect("Failed to render template");
-    println!(
-        "Generate File: {}/{}{}",
-        output_dir,
-        ns["name"].as_str().unwrap(),
-        suffix
-    );
     fileio::write(output_dir, ns["name"].as_str().unwrap(), suffix, &rendered);
 }
 
@@ -42,6 +36,9 @@ struct Args {
     /// Output folder
     #[arg(short = 'o', long = "output", value_name = "FOLDER")]
     output: String,
+    // verbose
+    #[arg(short = 'v', long = "verbose")]
+    verbose: Option<bool>,
 }
 
 fn main() {
@@ -72,30 +69,63 @@ fn main() {
             .expect(format!("Failed to add template: {:?}", tpl_str).as_str());
     }
     // get templates from the environment
-    let mut templates: Vec<(String, minijinja::Template<'_, '_>)> = Vec::new();
+    let mut templates: Vec<(String, Option<String>, minijinja::Template<'_, '_>)> = Vec::new();
     for tpl in config.templates.iter() {
         if let Some(suffix) = &tpl.suffix {
             let template = env
                 .get_template(tpl.name.as_str())
                 .expect("Template not found in environment");
-            templates.push((suffix.clone(), template));
+            templates.push((suffix.clone(), tpl.group.clone(), template));
         }
     }
 
-    // iterate over namespaces in json_data
+    // create a json output file which contains the info about generated files
+    let mut output_info = serde_json::json!({
+        "files": [],
+    });
+
+    let output_info_vec = output_info["files"].as_array_mut().unwrap();
+
     for ns in json_data["namespaces"].as_array().unwrap() {
         let namespace = ns["name"].as_str().unwrap();
         // if ns_filter is set, skip non-matching namespaces
         if let Some(filter) = &args.ns_filter {
-            if filter != namespace {
-                println!("Skipping Namespace: {}", namespace);
+            if filter.as_str() != namespace {
+                println!(
+                    "Skipping Namespace: '{}' filtered out by '{}'",
+                    namespace,
+                    filter.as_str()
+                );
                 continue;
             }
         }
-        println!("Generate files for Namespace: {}", namespace);
+        
+        if args.verbose.is_some() {
+            println!("Generate files for Namespace: '{}'", namespace);
+        }
+
         // generate files for each template
-        for (suffix, tpl) in templates.iter() {
+        for (suffix, group, tpl) in templates.iter() {
+            if group.is_some() {
+                output_info_vec.push(serde_json::json!({
+                    "file": format!("{}{}", ns["name"].as_str().unwrap(), suffix),
+                    "namespace": format!("{}",  namespace),
+                    "template": format!("{}",  tpl.name()),
+                    "group": group
+                }));
+            }
             generate_file(ns, tpl, suffix, &args.output);
+
+            if args.verbose.is_some() {
+                println!(
+                    "Generate File: {}/{}{}",
+                    &args.output,
+                    ns["name"].as_str().unwrap(),
+                    suffix
+                );
+            }
         }
     }
+    let pretty = serde_json::to_string_pretty(&output_info).unwrap();
+    fileio::write(&args.output, "files", ".json", &pretty);
 }
