@@ -29,6 +29,7 @@ comgen_source = rule(
         ),
         "deps": attr.label_list(),
     },
+    output_to_genfiles = True,
 )
 
 def _com_gen_filter_impl(ctx):
@@ -59,6 +60,7 @@ comgen_filter = rule(
             doc = "The comgen_filter Rust binary",
         ),
     },
+    output_to_genfiles = True,
 )
 
 def _com_gen_debug_impl(ctx):
