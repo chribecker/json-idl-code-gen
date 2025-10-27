@@ -1,0 +1,356 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "S-Core IDL (YAML format), version: TAG-PLACEHOLDER",
+    "description": "This file can be used to validate S-Core IDL files, which are normally written in YAML, not JSON.  The schema is not the source-of-truth but an artifact generated from the source-of-truth, so it should be consistent",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "#/definitions/Document"
+        }
+    ],
+    "definitions": {
+        "Document": {
+            "type": "object",
+            "properties": {
+                "namespaces": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Namespace"
+                    }
+                }
+            },
+            "required": [],
+            "additionalProperties": false
+        },
+        "Namespace": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "major_version": {
+                    "type": "integer"
+                },
+                "minor_version": {
+                    "type": "integer"
+                },
+                "version_label": {
+                    "type": "string"
+                },
+                "typedefs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Typedef"
+                    }
+                },
+                "structs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Struct"
+                    }
+                },
+                "enumerations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Enumeration"
+                    }
+                },
+                "interfaces": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Interface"
+                    }
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "additionalProperties": false
+        },
+        "Event": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "datatype": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "additionalProperties": false
+        },
+        "Argument": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "datatype": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "arraysize": {
+                    "type": "integer"
+                },
+                "range": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "datatype"
+            ],
+            "additionalProperties": false
+        },
+        "Method": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Error"
+                    }
+                },
+                "input": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Argument"
+                    }
+                },
+                "output": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Argument"
+                    }
+                },
+                "returns": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Argument"
+                    }
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "additionalProperties": false
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "datatype": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "arraysize": {
+                    "type": "integer"
+                },
+                "range": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "datatype"
+            ],
+            "additionalProperties": false
+        },
+        "Typedef": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "datatype": {
+                    "type": "string"
+                },
+                "element_datatype": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "min": {
+                    "type": "integer"
+                },
+                "max": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "additionalProperties": false
+        },
+        "Struct": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "members": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Member"
+                    }
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "additionalProperties": false
+        },
+        "Member": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "datatype": {
+                    "type": "string"
+                },
+                "default": {
+                    "anyOf": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "description": {
+                    "type": "string"
+                },
+                "arraysize": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "name",
+                "datatype"
+            ],
+            "additionalProperties": false
+        },
+        "Enumeration": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "datatype": {
+                    "type": "string"
+                },
+                "literals": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Literal"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "datatype",
+                "literals"
+            ],
+            "additionalProperties": false
+        },
+        "Literal": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "value": {
+                    "anyOf": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "description": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "value"
+            ],
+            "additionalProperties": false
+        },
+        "Interface": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the interface"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier of the interface"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "major_version": {
+                    "type": "integer"
+                },
+                "minor_version": {
+                    "type": "integer"
+                },
+                "version_label": {
+                    "type": "string"
+                },
+                "events": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Event"
+                    }
+                },
+                "methods": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Method"
+                    }
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "additionalProperties": false
+        }
+    }
+}

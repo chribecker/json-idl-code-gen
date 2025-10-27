@@ -1,0 +1,6 @@
+{
+   "yaml.schemas": {
+      ".vscode/scidl_schema.json":["*_types.yaml"],
+   },
+   "esbonio.server.enabled": false,
+}

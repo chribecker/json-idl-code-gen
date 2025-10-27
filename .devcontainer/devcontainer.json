@@ -13,7 +13,8 @@
                 "vadimcn.vscode-lldb",
                 "fill-labs.dependi",
                 "tamasfe.even-better-toml",
-                "bazelbuild.vscode-bazel"
+                "bazelbuild.vscode-bazel",
+                "redhat.vscode-yaml"
             ],
             "settings": {
                 // Use generated rust-project.json from Bazel (rules_rust) and avoid invoking cargo on sysroot.
