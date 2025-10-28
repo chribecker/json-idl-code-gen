@@ -1,0 +1,11 @@
+templates:
+
+  - file: "test.h.jinja"
+    name: "header_tpl"
+    suffix: ".h"
+    type: "cpplibhdr"
+
+  - file: "test.cpp.jinja"
+    name: "cpp_tpl"
+    suffix: ".cpp"
+    type: "cpplibsrc"

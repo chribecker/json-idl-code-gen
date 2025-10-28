@@ -1,48 +1,38 @@
-load("//rules:comgen_source.bzl", "comgen_debug", "comgen_filter", "comgen_source")
+load("//rules:comgen_source.bzl",  "comgen_file", "comgen_source")
+load("@rules_cc//cc:defs.bzl", "cc_library", "cc_binary")
 
 comgen_source(
-    name = "example_comgen",
-    src = "car_window_types.yaml",
-    namespace = "car_window_types",
+    name = "test_comgen",
+    src = "test.yaml",
+    namespace = "test",
+    templates = glob(["testtempl/**"]),
 )
 
-comgen_filter(
-    name = "example_comgen_cpp",
-    comgen = ":example_comgen",
-    group = "cc_codegen_library_srcs",
+comgen_file(
+    name = "test_comgen_src",
+    comgen = ":test_comgen",
+    type = "cpplibsrc",
+    output = "test.cpp",
 )
 
-comgen_filter(
-    name = "example_cc_comgen_lib",
-    comgen = ":example_comgen",
-    group = "cc_codegen_library_hdrs",
+comgen_file(
+    name = "test_comgen_hdr",
+    comgen = ":test_comgen",
+    type = "cpplibhdr",
+    output = "test.h",
 )
 
-comgen_filter(
-    name = "example_cc_skeleton_lib",
-    comgen = ":example_comgen",
-    group = "cc_skeleton_library_srcs",
+cc_library(
+    name = "test_cc_lib",
+    srcs = [":test_comgen_src"],
+    hdrs = [":test_comgen_hdr"],
+    strip_include_prefix = ".",
+    visibility = ["//visibility:public"],
 )
 
-comgen_filter(
-    name = "example_rust_comgen_lib",
-    comgen = ":example_comgen",
-    group = "rust_codegen_library_srcs",
-)
-
-comgen_debug(
-    name = "example_comgen_debug",
-    srcs = [
-        ":example_comgen",
-    ],
-)
-
-comgen_debug(
-    name = "example_comgen_filter_debug",
-    srcs = [
-        ":example_comgen_cpp",
-        ":example_cc_comgen_lib",
-        ":example_cc_skeleton_lib",
-        ":example_rust_comgen_lib",
-    ],
-)
+cc_binary(
+    name = "test_cc_bin",
+    srcs = ["testapp.cpp"],
+    deps = [":test_cc_lib"],
+    visibility = ["//visibility:public"],
+)   

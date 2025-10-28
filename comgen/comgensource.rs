@@ -28,8 +28,8 @@ struct Args {
     #[arg(short = 'n', long = "namespace", value_name = "NAMESPACE")]
     ns_filter: Option<String>,
     /// Template file name (must exist in embedded templates)
-    #[arg(short = 't', long = "template", value_name = "TEMPLATE")]
-    template: Option<String>,
+    #[arg(short = 't', long = "templates", value_name = "TEMPLATES")]
+    templates: Option<String>,
     /// Input file (JSON, YAML, or YML)
     #[arg(short = 'i', long = "input", value_name = "FILE")]
     input: String,
@@ -45,9 +45,9 @@ fn main() {
     let args = Args::parse();
     // Use default template if not provided
     let input_path = &args.input;
-    let template_folder = &args.template;
+    let templates_folder = &args.templates;
 
-    let config: Config = fileio::load_config(template_folder);
+    let config: Config = fileio::load_config(templates_folder);
 
     // Read input (JSON or YAML)
     let json_data: Value = fileio::load_input(input_path);
@@ -59,7 +59,7 @@ fn main() {
     // Create a vector to hold template tuples of (template_name, template_content)
     let mut template_content: Vec<(String, String)> = Vec::new();
     for tpl in config.templates.iter() {
-        let tpl_str = fileio::load_template(template_folder, &tpl.file);
+        let tpl_str = fileio::load_template(templates_folder, &tpl.file);
         template_content.push((tpl.name.clone(), tpl_str.clone()));
     }
 
@@ -74,8 +74,8 @@ fn main() {
         if let Some(suffix) = &tpl.suffix {
             let template = env
                 .get_template(tpl.name.as_str())
-                .expect("Template not found in environment");
-            templates.push((suffix.clone(), tpl.group.clone(), template));
+                .expect("Templates not found in environment");
+            templates.push((suffix.clone(), tpl.type_name.clone(), template));
         }
     }
 
@@ -105,13 +105,13 @@ fn main() {
         }
 
         // generate files for each template
-        for (suffix, group, tpl) in templates.iter() {
-            if group.is_some() {
+        for (suffix, type_name, tpl) in templates.iter() {
+            if type_name.is_some() {
                 output_info_vec.push(serde_json::json!({
                     "file": format!("{}{}", ns["name"].as_str().unwrap(), suffix),
                     "namespace": format!("{}",  namespace),
                     "template": format!("{}",  tpl.name()),
-                    "group": group
+                    "type": type_name
                 }));
             }
             generate_file(ns, tpl, suffix, &args.output);

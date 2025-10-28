@@ -46,9 +46,9 @@ rust_binary(
 )
 
 rust_binary(
-    name = "comgenfilter",
-    srcs = ["comgen/fileio.rs", "comgen/comgenfilter.rs"],
-    crate_root = "comgen/comgenfilter.rs",
+    name = "comgenfile",
+    srcs = ["comgen/fileio.rs", "comgen/comgenfile.rs"],
+    crate_root = "comgen/comgenfile.rs",
     aliases = aliases(),
     compile_data = [":embed_templates"],
     edition = "2021",
@@ -56,16 +56,6 @@ rust_binary(
     proc_macro_deps = [
         "@crates//:serde_derive",
     ],
-    visibility = ["//visibility:public"],
-)
-
-rust_binary(
-    name = "comgendebug",
-    srcs = ["comgen/comgendebug.rs"],
-    crate_root = "comgen/comgendebug.rs",
-    aliases = aliases(),
-    edition = "2021",
-    deps = all_crate_deps(normal = True),
     visibility = ["//visibility:public"],
 )
 

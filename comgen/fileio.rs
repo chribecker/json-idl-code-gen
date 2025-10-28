@@ -13,7 +13,8 @@ pub struct Template {
     pub file: String,
     pub name: String,
     pub suffix: Option<String>,
-    pub group: Option<String>,
+    #[serde(rename = "type")]
+    pub type_name: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -49,7 +50,7 @@ pub fn load_embedded(name: &str) -> String {
 /// Loads an external template from a specified directory.
 pub fn load_external(folder: &str, name: &str) -> String {
     let path = Path::new(folder).join(name);
-    fs::read_to_string(path).expect("Failed to read template file")
+    fs::read_to_string(&path).expect(format!("Failed to read template file: {:?}", &path).as_str())
 }
 
 pub fn load_config(template_folder: &Option<String>) -> Config {
@@ -107,7 +108,7 @@ fn test_template_suffix_optional() {
       - file: "datatypes.h.jinja"
         name: "header_tpl"
         suffix: "h"
-        group: "cc_codegen_library_hdrs"
+        type: "cc_codegen_library_hdrs"
     "#;
     let config: Config = serde_yaml::from_str(yaml).unwrap();
     assert_eq!(config.templates.len(), 2);
@@ -115,5 +116,5 @@ fn test_template_suffix_optional() {
     assert_eq!(config.templates[0].suffix, None);
     assert_eq!(config.templates[1].name, "header_tpl");
     assert_eq!(config.templates[1].suffix.as_deref(), Some("h"));
-    assert_eq!(config.templates[1].group.as_deref(), Some("cc_codegen_library_hdrs"));
+    assert_eq!(config.templates[1].type_name.as_deref(), Some("cc_codegen_library_hdrs"));
 }
