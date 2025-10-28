@@ -6,12 +6,12 @@ This Rust application reads a JSON file and a Jinja templates, then generates a 
 
 Generate code using custom templates.
 ```
-json-idl-code-gen -t <templates> -i <input> -o <output>
+comgensource -t <templates> -i <input> -o <output>
 ```
 
 Generate code using internal templates.
 ```
-json-idl-code-gen -i <input> -o <output>
+comgensource -i <input> -o <output>
 ```
 
 - `<template>`: Folder path to your Jinja template files and config.yaml
@@ -26,9 +26,16 @@ A `.devcontainer` is provided with Rust, rust-analyzer, and development tools pr
 - Rust dependencies: `minijinja`, `serde`, `serde_json`
 - VS Code extension: `rust-analyzer` (auto-installed in devcontainer)
 
-## Tasks
-- Build: `cargo build`
-- Run: `cargo run -- -t <templates> -i <input> -o <output>`
+## Bazel Build and Run
+- Build Comgen: `bazel build //comgen:comgen_source`
+- Test All: `bazel test //...`
+- Run: `bazel run //comgen:comgen_source -- -i $PWD/<input> -o $PWD/<output>`
+
+## Run Tool after build
+`./bazel-bin/comgensource -i <input> -o <output>`
+
+or with example files:
+`./bazel-bin/comgensource -i ./tests/car_window_types.yaml -o testoutput`
 
 ## License
 [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)
