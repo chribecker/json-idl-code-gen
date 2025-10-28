@@ -1,0 +1,28 @@
+{
+  "files": [
+    {
+      "file": "car_window_types.h",
+      "namespace": "car_window_types",
+      "template": "header_tpl",
+      "type": "cc_library_hdrs"
+    },
+    {
+      "file": "car_window_types.rs",
+      "namespace": "car_window_types",
+      "template": "rust_tpl",
+      "type": "rust_library_srcs"
+    },
+    {
+      "file": "car_window_types.cpp",
+      "namespace": "car_window_types",
+      "template": "cpp_tpl",
+      "type": "cc_library_srcs"
+    },
+    {
+      "file": "car_window_types_skeleton.cpp",
+      "namespace": "car_window_types",
+      "template": "cpp_skeleton_tpl",
+      "type": "cc_skeleton_library_srcs"
+    }
+  ]
+}

@@ -21,7 +21,6 @@ BEGIN_EXPORT_MW_COM_INTERFACE(car_window_types_CarWindowInfo_interface, ::car_wi
 EXPORT_MW_COM_EVENT(car_window_types_CarWindowInfo_interface, ::car_window_types::WindowInfo, window_info)
 END_EXPORT_MW_COM_INTERFACE()
 
-EXPORT_MW_COM_TYPE(car_window_types_WindowState_type, ::car_window_types::WindowState)
-EXPORT_MW_COM_TYPE(car_window_types_WindowCommand_type, ::car_window_types::WindowCommand)
-EXPORT_MW_COM_TYPE(car_window_types_WindowInfo_type, ::car_window_types::WindowInfo)
+
 EXPORT_MW_COM_TYPE(car_window_types_WindowControl_type, ::car_window_types::WindowControl)
+EXPORT_MW_COM_TYPE(car_window_types_WindowInfo_type, ::car_window_types::WindowInfo)

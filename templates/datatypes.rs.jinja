@@ -45,13 +45,15 @@ pub struct {{ str.name }} {
 {% endfor %}
 }
 
-mw_com::import_type!({{ns.name}}_{{str.name}}_type, crate::{{str.name}});
-
 {% endfor %}
+{% for type in ns.usedtypes %}
+mw_com::import_type!({{ns.name}}_{{type}}_type, crate::{{type}});
+{% endfor %}
+
 {% for intf in ns.interfaces %}
 mw_com::import_interface!({{ns.name}}_{{intf.name}}_interface, {{intf.name}}, {
 {% for ev in intf.events %}
-    {{ ev.name }}: Event<crate::{{ macros.to_rust_type(ev.datatype) }}>,
+    {{ ev.name }}: Event<crate::{{ macros.to_rust_type(ev.datatype) }}>{% if  not loop.last %},{% endif %} 
 {% endfor %}
 });
 

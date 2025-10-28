@@ -22,9 +22,7 @@ EXPORT_MW_COM_EVENT({{ns.name}}_{{interf.name}}_interface, ::{{ns.name}}::{{ mac
 END_EXPORT_MW_COM_INTERFACE()
 
 {% endfor %}
-{% for en in ns.enumerations %}
-EXPORT_MW_COM_TYPE({{ ns.name }}_{{ en.name }}_type, ::{{ ns.name }}::{{ en.name }})
-{% endfor %}
-{% for str in ns.structs %}
-EXPORT_MW_COM_TYPE({{ ns.name }}_{{ str.name }}_type, ::{{ ns.name }}::{{ str.name }})
+
+{% for type in ns.usedtypes %}
+EXPORT_MW_COM_TYPE({{ ns.name }}_{{ type }}_type, ::{{ ns.name }}::{{ type }})
 {% endfor %}

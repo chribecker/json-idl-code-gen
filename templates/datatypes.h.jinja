@@ -41,6 +41,7 @@ namespace {{ns.name}} {
 {% endif %}
     struct {{ str.name }} {
         // {{ str.name }}() : {% for member in str.members %}{% if not loop.first %}, {% endif %}{{member.name}}(0){% endfor %}{}
+        {{ str.name }}() = default;
         {{ str.name }}({{ str.name }}&&) = default;
         {{ str.name }}(const {{ str.name }}&) = default;
         {{ str.name }}& operator=({{ str.name }}&&) = default;
@@ -54,22 +55,25 @@ namespace {{ns.name}} {
     };
 
 {% endfor %}
-{% for ns2 in ns.namespaces %}
-{% if ns2.interface != None %}
+
+{% for intf in ns.interfaces %}
     template <typename Trait>
-    class {{ns2.name}}Interface : public Trait::Base
+    class {{intf.name}}Interface : public Trait::Base
     {
         public:
         using Trait::Base::Base;
 
-{% for ev in ns2.interface.events %}
-{% for input in ev.input %}
-        typename Trait::template Event<{{ macros.to_cpp_type(input.datatype) }}> {{ input.name }}{*this, "{{ ev.name }}"};
-{% endfor %}
+{% for ev in intf.events %}
+        typename Trait::template Event<{{ macros.to_cpp_type(ev.datatype) }}> {{ ev.name }}{*this, "{{ ev.name }}"};
 {% endfor %}
     };
 
-{% endif %}
 {% endfor %}
+
+{% for intf in ns.interfaces %}
+    using {{intf.name}}Proxy = score::mw::com::AsProxy<{{intf.name}}Interface>;
+    using {{intf.name}}Skeleton = score::mw::com::AsSkeleton<{{intf.name}}Interface>;
+{% endfor %}
+
 }
 #endif // SCORE_{{ns.name | upper }}_H

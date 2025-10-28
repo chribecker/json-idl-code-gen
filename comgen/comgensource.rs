@@ -1,6 +1,6 @@
 use clap::Parser;
 use minijinja::{context, Environment};
-use serde_json::Value;
+use serde_json::{json, Value};
 
 mod fileio;
 use fileio::Config;
@@ -50,11 +50,34 @@ fn main() {
     let config: Config = fileio::load_config(templates_folder);
 
     // Read input (JSON or YAML)
-    let json_data: Value = fileio::load_input(input_path);
+    let mut json_data: Value = fileio::load_input(input_path);
 
     // Setup Jinja environment
     let mut env = Environment::new();
     env.set_trim_blocks(true);
+
+    // Collect used types per namespace
+    for ns in json_data["namespaces"].as_array_mut().unwrap() {
+        let mut usedtypes: Vec<String> = Vec::new();
+
+        if let Some(interfaces) = ns["interfaces"].as_array() {
+            for iface in interfaces {
+                //events
+                if let Some(events) = iface["events"].as_array() {
+                    for event in events {
+                        let type_name = event["datatype"].as_str().unwrap();
+                        if !usedtypes.contains(&type_name.to_string()) {
+                            usedtypes.push(type_name.to_string());
+                        }
+                    }
+                }
+            }
+        }
+        if let Some(obj) = ns.as_object_mut() {
+            obj.insert("usedtypes".to_string(), json!(&usedtypes));
+        }
+    }
+
 
     // Create a vector to hold template tuples of (template_name, template_content)
     let mut template_content: Vec<(String, String)> = Vec::new();
@@ -99,7 +122,7 @@ fn main() {
                 continue;
             }
         }
-        
+
         if args.verbose.is_some() {
             println!("Generate files for Namespace: '{}'", namespace);
         }

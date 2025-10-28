@@ -62,8 +62,6 @@ pub struct WindowInfo {
     pub pos: u32,
 }
 
-mw_com::import_type!(car_window_types_WindowInfo_type, crate::WindowInfo);
-
 /*
  * Control command for the car window
  */
@@ -74,11 +72,12 @@ pub struct WindowControl {
 }
 
 mw_com::import_type!(car_window_types_WindowControl_type, crate::WindowControl);
+mw_com::import_type!(car_window_types_WindowInfo_type, crate::WindowInfo);
 
 mw_com::import_interface!(car_window_types_CarWindowControl_interface, CarWindowControl, {
-    window_control: Event<crate::WindowControl>,
+    window_control: Event<crate::WindowControl> 
 });
 
 mw_com::import_interface!(car_window_types_CarWindowInfo_interface, CarWindowInfo, {
-    window_info: Event<crate::WindowInfo>,
+    window_info: Event<crate::WindowInfo> 
 });

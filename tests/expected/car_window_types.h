@@ -43,6 +43,7 @@ namespace car_window_types {
      */
     struct WindowInfo {
         // WindowInfo() : state(0), pos(0){}
+        WindowInfo() = default;
         WindowInfo(WindowInfo&&) = default;
         WindowInfo(const WindowInfo&) = default;
         WindowInfo& operator=(WindowInfo&&) = default;
@@ -60,6 +61,7 @@ namespace car_window_types {
      */
     struct WindowControl {
         // WindowControl() : command(0){}
+        WindowControl() = default;
         WindowControl(WindowControl&&) = default;
         WindowControl(const WindowControl&) = default;
         WindowControl& operator=(WindowControl&&) = default;
@@ -68,6 +70,31 @@ namespace car_window_types {
         // Command to control the window
         WindowCommand command;
     };
+
+
+    template <typename Trait>
+    class CarWindowControlInterface : public Trait::Base
+    {
+        public:
+        using Trait::Base::Base;
+
+        typename Trait::template Event<WindowControl> window_control{*this, "window_control"};
+    };
+
+    template <typename Trait>
+    class CarWindowInfoInterface : public Trait::Base
+    {
+        public:
+        using Trait::Base::Base;
+
+        typename Trait::template Event<WindowInfo> window_info{*this, "window_info"};
+    };
+
+
+    using CarWindowControlProxy = score::mw::com::AsProxy<CarWindowControlInterface>;
+    using CarWindowControlSkeleton = score::mw::com::AsSkeleton<CarWindowControlInterface>;
+    using CarWindowInfoProxy = score::mw::com::AsProxy<CarWindowInfoInterface>;
+    using CarWindowInfoSkeleton = score::mw::com::AsSkeleton<CarWindowInfoInterface>;
 
 }
 #endif // SCORE_CAR_WINDOW_TYPES_H
