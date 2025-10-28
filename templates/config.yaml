@@ -5,19 +5,19 @@ templates:
   - file: "datatypes.h.jinja"
     name: "header_tpl"
     suffix: ".h"
-    group: "cc_codegen_library_hdrs"
+    type: "cc_library_hdrs"
 
   - file: "datatypes.rs.jinja"
     name: "rust_tpl"
     suffix: ".rs"
-    group: "rust_codegen_library_srcs"
+    type: "rust_library_srcs"
 
   - file: "datatypes.cpp.jinja"
     name: "cpp_tpl"
     suffix: ".cpp"
-    group: "cc_codegen_library_srcs"
+    type: "cc_library_srcs"
 
   - file: "datatypes.skeleton.cpp.jinja"
     name: "cpp_skeleton_tpl"
     suffix: "_skeleton.cpp"
-    group: "cc_skeleton_library_srcs"
+    type: "cc_skeleton_library_srcs"
