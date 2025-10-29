@@ -35,9 +35,6 @@ fn main() -> io::Result<()> {
     let json_data: Value = serde_yaml::from_str(&input_str)
         .expect(format!("Failed to parse files.json: {:?}", files_json.display()).as_str());
     
-    //fs::create_dir_all(args.output.as_path().parent()).expect("Failed to create output directories");
-
-    //print!("Loaded JSON data: {:?}\n", json_data);
     if let Some(xxx) = json_data["files"].as_array() {
         for item in xxx {
             let file = item["file"].as_str().expect(format!("Failed to parse file element in files.json: {:?}", files_json.display()).as_str());
@@ -45,8 +42,7 @@ fn main() -> io::Result<()> {
             if type_name == args.type_name {
                 let src_path = args.input.join(file);
                 let dest_path = args.output.clone();
-                println!("Copying file: {:?} to {:?}", src_path, dest_path);
-                fs::copy(&src_path, &dest_path).expect("Failed to copy file");
+                fs::copy(&src_path, &dest_path).expect(format!("Failed to copy file: {:?} to {:?}", src_path, dest_path).as_str());
             }
         }
     }
