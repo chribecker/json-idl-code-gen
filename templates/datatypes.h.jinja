@@ -40,8 +40,9 @@ namespace {{ns.name}} {
      */
 {% endif %}
     struct {{ str.name }} {
-        // {{ str.name }}() : {% for member in str.members %}{% if not loop.first %}, {% endif %}{{member.name}}(0){% endfor %}{}
-        {{ str.name }}() = default;
+        {% set vars = namespace() -%}
+        {%- set vars.first = true -%}
+        {{ str.name }}(): {% for member in str.members %}{% if member.default is defined %}{% if not vars.first %}, {% endif %}{{member.name}}({{macros.cpp_type_prefixed_defaultvalue(member.datatype, member.default)}}){% set vars.first = false %}{% endif %}{% endfor %} {};
         {{ str.name }}({{ str.name }}&&) = default;
         {{ str.name }}(const {{ str.name }}&) = default;
         {{ str.name }}& operator=({{ str.name }}&&) = default;

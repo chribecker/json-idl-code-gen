@@ -42,8 +42,7 @@ namespace car_window_types {
      * Status of the car window
      */
     struct WindowInfo {
-        // WindowInfo() : state(0), pos(0){}
-        WindowInfo() = default;
+        WindowInfo(): state(WindowState::Stopped), pos(0) {};
         WindowInfo(WindowInfo&&) = default;
         WindowInfo(const WindowInfo&) = default;
         WindowInfo& operator=(WindowInfo&&) = default;
@@ -60,8 +59,7 @@ namespace car_window_types {
      * Control command for the car window
      */
     struct WindowControl {
-        // WindowControl() : command(0){}
-        WindowControl() = default;
+        WindowControl(): command(WindowCommand::Stop) {};
         WindowControl(WindowControl&&) = default;
         WindowControl(const WindowControl&) = default;
         WindowControl& operator=(WindowControl&&) = default;

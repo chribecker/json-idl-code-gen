@@ -65,3 +65,11 @@
         {{ cpp_suffix_map[json_type] }}
     {%- endif -%}
 {%- endmacro %}
+
+{%- macro cpp_type_prefixed_defaultvalue(json_type,default_value) -%}
+    {%- if json_type in cpp_suffix_map -%}
+{{ default_value }}
+    {%- else -%}
+{{ json_type }}::{{ default_value }}
+    {%- endif -%}
+{%- endmacro %}
