@@ -8,20 +8,17 @@ use std::path::Path;
 use similar_asserts::assert_eq;
 use std::env;
 
-// boolean constant to enable/disable expected file overwrite
-const OVERWRITE_EXPECTED: bool = false;
-
 #[test]
 fn test_main_generates_files() {
     let bin = env::var("COMGEN_BIN").expect("COMGEN_BIN not set");
-    eprint!("Running test_main_generates_files {}\n", bin);
-    let output_dir = "test_output";
-    let _ = fs::remove_dir_all(output_dir); // Clean up before test
+    // $TEST_UNDECLARED_OUTPUTS_DIR is set by bazel to a writable directory
+    let output_dir = format!("{}/test_main_generates_files", env::var("TEST_UNDECLARED_OUTPUTS_DIR").expect("env var TEST_UNDECLARED_OUTPUTS_DIR not set"));
+    let _ = fs::remove_dir_all(&output_dir); // Clean up before test
     let mut cmd = Command::new(bin);
     cmd.arg("-i")
         .arg("tests/car_window_types.yaml")
         .arg("-o")
-        .arg(output_dir);
+        .arg(output_dir.clone());
     cmd.assert().success();
     // Check that output files are created (example: car_window_types.h, car_window_types.rs, etc.)
     let expected_files = [
@@ -31,7 +28,7 @@ fn test_main_generates_files() {
         "car_window_types_skeleton.cpp",
     ];
     for file in expected_files.iter() {
-        let path = Path::new(output_dir).join(file);
+        let path = Path::new(&output_dir).join(file);
         assert!(
             path.exists(),
             "Expected output file {:?} does not exist",
@@ -40,10 +37,6 @@ fn test_main_generates_files() {
         let  gen_content = fs::read_to_string(&path).expect("Failed to read generated file");
         // compare content with the files in expected folder
         let epath = Path::new("tests/expected").join(file);
-        // if expected file does not exist, create it with the generated content
-        if OVERWRITE_EXPECTED || !epath.exists() {
-            fs::write(&epath, &gen_content).expect("Failed to create expected file");
-        }
         assert!(
             epath.exists(),
             "Expected output file {:?} does not exist",
@@ -52,7 +45,6 @@ fn test_main_generates_files() {
         let  expected_content = fs::read_to_string(&epath).expect("Failed to read expected file");
         assert_eq!(gen_content, expected_content, "Content mismatch in file {:?}", file);
     }
-    let _ = fs::remove_dir_all(output_dir); // Clean up after test
 }
 
 #[test]
