@@ -22,23 +22,23 @@ fn generate_file(
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 #[command(name = "comgen")]
-#[command(about = "Code generator using MiniJinja and JSON/YAML input", long_about = None)]
+#[command(about = "mw::com code generator from JSON/YAML input", long_about = None)]
 struct Args {
-    /// Template file name (must exist in embedded templates)
+    /// (Optional) Namespace filter (only generate interfaces for this namespace)
     #[arg(short = 'n', long = "namespace", value_name = "NAMESPACE")]
     ns_filter: Option<String>,
-    /// Template file name (must exist in embedded templates)
+    /// (Optional) Folder containing Jinja templates
     #[arg(short = 't', long = "templates", value_name = "TEMPLATES")]
     templates: Option<String>,
     /// Input file (JSON, YAML, or YML)
     #[arg(short = 'i', long = "input", value_name = "FILE")]
     input: String,
-    /// Output folder
+    /// Output folder for generated files
     #[arg(short = 'o', long = "output", value_name = "FOLDER")]
     output: String,
-    // verbose
-    #[arg(short = 'v', long = "verbose")]
-    verbose: Option<bool>,
+    /// (Optional) Verbose output flag
+    #[arg(short = 'v', long = "verbose", action = clap::ArgAction::SetTrue)]
+    verbose: bool,
 }
 
 fn main() {
@@ -123,7 +123,7 @@ fn main() {
             }
         }
 
-        if args.verbose.is_some() {
+        if args.verbose {
             println!("Generate files for Namespace: '{}'", namespace);
         }
 
@@ -139,7 +139,7 @@ fn main() {
             }
             generate_file(ns, tpl, suffix, &args.output);
 
-            if args.verbose.is_some() {
+            if args.verbose {
                 println!(
                     "Generate File: {}/{}{}",
                     &args.output,

@@ -51,7 +51,7 @@ comgen_source = rule(
         "namespace": attr.string(doc = "namespace filter to use for generated code", default = ""),
         "templates": attr.label_list(allow_files = True, doc = "Optional templates directory for code generation"),
         "_tool": attr.label(
-            default = Label("//:comgensource"),
+            default = Label("//:comgen"),
             executable = True,
             cfg = "exec",
             doc = "The comgen_source Rust binary",

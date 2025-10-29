@@ -32,9 +32,9 @@ rust_library(
 )
 
 rust_binary(
-    name = "comgensource",
-    srcs = ["comgen/fileio.rs", "comgen/comgensource.rs"],
-    crate_root = "comgen/comgensource.rs",
+    name = "comgen",
+    srcs = ["comgen/fileio.rs", "comgen/comgen.rs"],
+    crate_root = "comgen/comgen.rs",
     aliases = aliases(),
     compile_data = [":embed_templates"],
     edition = "2021",
@@ -65,14 +65,14 @@ rust_test(
     data = glob([
         "templates/**",
         "tests/**",
-    ]) + ["//:comgensource"],
+    ]) + ["//:comgen"],
     deps = [
         "@crates//:assert_cmd",
         "@crates//:predicates",
         "@crates//:similar-asserts",
     ],
     env = {
-        "COMGEN_BIN": "$(rootpath //:comgensource)",
+        "COMGEN_BIN": "$(rootpath //:comgen)",
     },
 )
 

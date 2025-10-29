@@ -24,11 +24,12 @@ This document describes the IDL data type mappings used in the code generation p
 
 ## Compound Types
 
-| IDL Data Type   | C++                   | Rust            |
-|-----------------|-----------------------|-----------------|
-| enum            | `enum class`          | `enum`          |
-| struct          | `struct`              | `struct`        |
-| array<T,N>      | `std::array<T, N>`    | `[T; N]`        |
+| IDL Data Type   | C++                                | Rust       |
+|-----------------|------------------------------------|------------|
+| enum            | `enum class`                       | `enum`     |
+| struct          | `struct`                           | `struct`   |
+| array<T,N>      | `std::array<T, N>`<br>`member[N]`  | `[T; N]`   |
+
 
 
 ## Additional Compound Types may be not supported in S-Core, but here is a suggested mapping:
