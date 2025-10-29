@@ -60,6 +60,7 @@ impl Default for WindowCommand {
 pub struct WindowInfo {
     pub state: WindowState,
     pub pos: u32,
+    pub lastpos: [u32;5],
 }
 
 /*
@@ -71,13 +72,29 @@ pub struct WindowControl {
     pub command: WindowCommand,
 }
 
+/*
+ * array of 10 uint16
+ */
+#[repr(C)]
+#[derive(Debug,Clone,Default)]
+pub struct MyU16Array(pub [u16;10]);
+
+/*
+ * 16-bit unsigned integer
+ */
+#[repr(C)]
+#[derive(Debug,Clone,Default)]
+pub struct MyU16(pub u16);
+
 mw_com::import_type!(car_window_types_WindowControl_type, crate::WindowControl);
 mw_com::import_type!(car_window_types_WindowInfo_type, crate::WindowInfo);
+mw_com::import_type!(car_window_types_MyU16_type, crate::MyU16);
 
 mw_com::import_interface!(car_window_types_CarWindowControl_interface, CarWindowControl, {
     window_control: Event<crate::WindowControl> 
 });
 
 mw_com::import_interface!(car_window_types_CarWindowInfo_interface, CarWindowInfo, {
-    window_info: Event<crate::WindowInfo> 
+    window_info: Event<crate::WindowInfo>, 
+    counter: Event<crate::MyU16> 
 });

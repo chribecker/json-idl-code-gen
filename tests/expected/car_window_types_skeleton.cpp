@@ -19,8 +19,10 @@ END_EXPORT_MW_COM_INTERFACE()
 
 BEGIN_EXPORT_MW_COM_INTERFACE(car_window_types_CarWindowInfo_interface, ::car_window_types::CarWindowInfoProxy, ::car_window_types::CarWindowInfoSkeleton)
 EXPORT_MW_COM_EVENT(car_window_types_CarWindowInfo_interface, ::car_window_types::WindowInfo, window_info)
+EXPORT_MW_COM_EVENT(car_window_types_CarWindowInfo_interface, ::car_window_types::MyU16, counter)
 END_EXPORT_MW_COM_INTERFACE()
 
 
 EXPORT_MW_COM_TYPE(car_window_types_WindowControl_type, ::car_window_types::WindowControl)
 EXPORT_MW_COM_TYPE(car_window_types_WindowInfo_type, ::car_window_types::WindowInfo)
+EXPORT_MW_COM_TYPE(car_window_types_MyU16_type, ::car_window_types::MyU16)

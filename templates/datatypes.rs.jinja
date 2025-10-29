@@ -41,19 +41,38 @@ impl Default for {{ en.name }} {
 #[derive(Debug,Clone,Default)]
 pub struct {{ str.name }} {
 {% for member in str.members %}
+{% if member.arraysize is defined %}
+    pub {{member.name }}: [{{ macros.to_rust_type(member.datatype) }};{{ member.arraysize }}],
+{% else %}
     pub {{member.name }}: {{macros.to_rust_type(member.datatype)}},
+{% endif %}
 {% endfor %}
 }
 
 {% endfor %}
+{% for td in ns.typedefs %}
+/*
+ * {{ td.description }}
+ */
+#[repr(C)]
+#[derive(Debug,Clone,Default)]
+{% if td.arraysize is defined %}
+pub struct {{ td.name }}(pub [{{ macros.to_rust_type(td.datatype) }};{{ td.arraysize }}]);
+{% else %}
+pub struct {{ td.name }}(pub {{ macros.to_rust_type(td.datatype) }});
+{% endif %}
+
+{% endfor %}
 {% for type in ns.usedtypes %}
-mw_com::import_type!({{ns.name}}_{{type}}_type, crate::{{type}});
+{% if not type in macros.rust_type_map %}
+mw_com::import_type!({{ns.name}}_{{ macros.to_rust_type(type) }}_type, {{ macros.to_rust_crate_type(type) }});
+{% endif %}
 {% endfor %}
 
 {% for intf in ns.interfaces %}
 mw_com::import_interface!({{ns.name}}_{{intf.name}}_interface, {{intf.name}}, {
 {% for ev in intf.events %}
-    {{ ev.name }}: Event<crate::{{ macros.to_rust_type(ev.datatype) }}>{% if  not loop.last %},{% endif %} 
+    {{ ev.name }}: Event<{{ macros.to_rust_crate_type(ev.datatype) }}>{% if  not loop.last %},{% endif %} 
 {% endfor %}
 });
 

@@ -42,7 +42,19 @@ namespace {{ns.name}} {
     struct {{ str.name }} {
         {% set vars = namespace() -%}
         {%- set vars.first = true -%}
-        {{ str.name }}(): {% for member in str.members %}{% if member.default is defined %}{% if not vars.first %}, {% endif %}{{member.name}}({{macros.cpp_type_prefixed_defaultvalue(member.datatype, member.default)}}){% set vars.first = false %}{% endif %}{% endfor %} {};
+        {{ str.name }}(): 
+            {%- set vars.first = true -%}
+            {%- for member in str.members %}
+                {%- if member.default is defined -%}
+                    {%- if not vars.first %},{% endif %} {{ member.name }} 
+                    {%- if member.arraysize is defined -%}
+                    { {{ macros.cpp_type_prefixed_defaultvalue(member.datatype, member.default) }} } 
+                    {%- else -%}
+                    ({{ macros.cpp_type_prefixed_defaultvalue(member.datatype, member.default) }})
+                    {%- endif -%}
+                    {%- set vars.first = false -%}
+                {%- endif -%}
+            {%- endfor %} {};
         {{ str.name }}({{ str.name }}&&) = default;
         {{ str.name }}(const {{ str.name }}&) = default;
         {{ str.name }}& operator=({{ str.name }}&&) = default;
@@ -51,9 +63,19 @@ namespace {{ns.name}} {
 {% if member.description  is defined  %}
         // {{ member.description }}
 {% endif %}
-        {{macros.to_cpp_type(member.datatype)}} {{member.name }};
+        {{macros.to_cpp_type(member.datatype)}} {{member.name }}{% if member.arraysize is defined %}[{{member.arraysize}}]{% endif %};
 {% endfor %}
     };
+
+{% endfor %}
+
+{% for td in ns.typedefs %}
+{% if td.description is defined %}
+    /*
+     * {{ td.description }}
+     */
+{% endif %}
+    typedef {{macros.to_cpp_type(td.datatype)}} {{td.name}}{% if td.arraysize is defined %}[{{td.arraysize}}]{% endif %};
 
 {% endfor %}
 

@@ -52,6 +52,15 @@
     {%- endif -%}
 {%- endmacro %} 
 
+{% macro to_rust_crate_type(json_type) -%}
+    {%- if json_type in rust_type_map -%}
+        {{ rust_type_map[json_type] }}
+    {%- else -%}
+        crate::{{ json_type }}
+    {%- endif -%}
+{%- endmacro %} 
+
+
 {% macro to_cpp_type(json_type) -%}
     {%- if json_type in cpp_type_map -%}
         {{ cpp_type_map[json_type] }}

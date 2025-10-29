@@ -42,7 +42,7 @@ namespace car_window_types {
      * Status of the car window
      */
     struct WindowInfo {
-        WindowInfo(): state(WindowState::Stopped), pos(0) {};
+        WindowInfo(): state(WindowState::Stopped), pos(0), lastpos{ 0 } {};
         WindowInfo(WindowInfo&&) = default;
         WindowInfo(const WindowInfo&) = default;
         WindowInfo& operator=(WindowInfo&&) = default;
@@ -53,6 +53,9 @@ namespace car_window_types {
  
         // Position of the window (0% = closed, 100% = open)
         std::uint32_t pos;
+ 
+        // Last 5 positions of the window
+        std::uint32_t lastpos[5];
     };
 
     /*
@@ -68,6 +71,17 @@ namespace car_window_types {
         // Command to control the window
         WindowCommand command;
     };
+
+
+    /*
+     * array of 10 uint16
+     */
+    typedef std::uint16_t MyU16Array[10];
+
+    /*
+     * 16-bit unsigned integer
+     */
+    typedef std::uint16_t MyU16;
 
 
     template <typename Trait>
@@ -86,6 +100,7 @@ namespace car_window_types {
         using Trait::Base::Base;
 
         typename Trait::template Event<WindowInfo> window_info{*this, "window_info"};
+        typename Trait::template Event<MyU16> counter{*this, "counter"};
     };
 
 

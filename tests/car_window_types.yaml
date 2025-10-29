@@ -22,6 +22,9 @@ namespaces:
           - name: window_info
             datatype: WindowInfo
             description: Event providing status information of the window
+          - name: counter
+            datatype: MyU16
+            description: Counter example using typedef
 
 
     enumerations:
@@ -68,6 +71,11 @@ namespaces:
             datatype: uint32
             default: 0
             description: Position of the window (0% = closed, 100% = open)
+          - name: lastpos
+            datatype: uint32
+            default: 0
+            description: Last 5 positions of the window
+            arraysize: 5
 
       - name: WindowControl
         description: Control command for the car window
@@ -79,8 +87,11 @@ namespaces:
 
     typedefs:
 
-      - name: ArrayOfWindowInfo
-        description: Array of window information
-        datatype: array
-        element_datatype: WindowInfo
-        size: 10
+      - name: MyU16Array
+        description: array of 10 uint16
+        datatype: uint16
+        arraysize: 10
+    
+      - name: MyU16
+        description: 16-bit unsigned integer
+        datatype: uint16

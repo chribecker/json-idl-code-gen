@@ -191,7 +191,7 @@
                 "description": {
                     "type": "string"
                 },
-                "size": {
+                "arraysize": {
                     "type": "integer"
                 },
                 "min": {
