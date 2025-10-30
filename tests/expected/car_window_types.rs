@@ -13,7 +13,26 @@
 
 use std::default::Default;
 /*
- * State of the car window
+ * Enumerator that specifies the possible commands to control the car window
+ */
+#[repr(u32)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum WindowCommand {
+  Stop = 0,
+  Open = 1,
+  Close = 2,
+  Exit = 3,
+}
+
+/* Default implementation for WindowCommand */
+impl Default for WindowCommand {
+    fn default() -> Self {
+        WindowCommand::Stop
+    }
+}
+
+/*
+ * Enumerator that specifies the possible states of the car window
  */
 #[repr(u32)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -34,26 +53,16 @@ impl Default for WindowState {
 }
 
 /*
- * Commands for the car window
+ * Control command structure for the car window
  */
-#[repr(u32)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum WindowCommand {
-  Stop = 0,
-  Open = 1,
-  Close = 2,
-  Shutdown = 3,
-}
-
-/* Default implementation for WindowCommand */
-impl Default for WindowCommand {
-    fn default() -> Self {
-        WindowCommand::Stop
-    }
+#[repr(C)]
+#[derive(Debug,Clone,Default)]
+pub struct WindowControl {
+    pub command: WindowCommand,
 }
 
 /*
- * Status of the car window
+ * Status and information structure of the car window
  */
 #[repr(C)]
 #[derive(Debug,Clone,Default)]
@@ -64,37 +73,28 @@ pub struct WindowInfo {
 }
 
 /*
- * Control command for the car window
- */
-#[repr(C)]
-#[derive(Debug,Clone,Default)]
-pub struct WindowControl {
-    pub command: WindowCommand,
-}
-
-/*
- * array of 10 uint16
- */
-#[repr(C)]
-#[derive(Debug,Clone,Default)]
-pub struct MyU16Array(pub [u16;10]);
-
-/*
- * 16-bit unsigned integer
+ * Type definition of uint16 as MyU16
  */
 #[repr(C)]
 #[derive(Debug,Clone,Default)]
 pub struct MyU16(pub u16);
 
-mw_com::import_type!(car_window_types_WindowControl_type, crate::WindowControl);
-mw_com::import_type!(car_window_types_WindowInfo_type, crate::WindowInfo);
-mw_com::import_type!(car_window_types_MyU16_type, crate::MyU16);
+/*
+ * Type definition of an array of 10 uint16
+ */
+#[repr(C)]
+#[derive(Debug,Clone,Default)]
+pub struct MyU16Array(pub [MyU16;10]);
 
-mw_com::import_interface!(car_window_types_CarWindowControl_interface, CarWindowControl, {
-    window_control: Event<crate::WindowControl> 
+mw_com::import_type!(car_window_types_WindowControl_type, crate::WindowControl);
+mw_com::import_type!(car_window_types_MyU16Array_type, crate::MyU16Array);
+mw_com::import_type!(car_window_types_WindowInfo_type, crate::WindowInfo);
+
+mw_com::import_interface!(car_window_types_WindowControl_interface, WindowControl, {
+    window_control: Event<crate::WindowControl>, 
+    window_counter: Event<crate::MyU16Array> 
 });
 
-mw_com::import_interface!(car_window_types_CarWindowInfo_interface, CarWindowInfo, {
-    window_info: Event<crate::WindowInfo>, 
-    counter: Event<crate::MyU16> 
+mw_com::import_interface!(car_window_types_WindowInfo_interface, WindowInfo, {
+    window_info: Event<crate::WindowInfo> 
 });

@@ -1,6 +1,9 @@
 namespaces: 
   - name: car_window_types
-    description: Types for car window simulation
+    description: |-
+      Types for car window simulation
+      multiline description test
+      - x additional detail about the car window simulation
 
     interfaces:
       - name: CarWindowControl
@@ -58,7 +61,11 @@ namespaces:
     structs:
 
       - name: WindowInfo
-        description: Status of the car window
+        description: |-
+          Status of the car window
+          multiline description test
+          additional detail about the car window status
+
         members:
           - name: state
             datatype: WindowState
@@ -83,4 +90,4 @@ namespaces:
         description: Array of window information
         datatype: array
         element_datatype: WindowInfo
-        size: 10
+        arraysize: 10

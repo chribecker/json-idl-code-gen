@@ -1,0 +1,65 @@
+/**
+ * Data types and interfaces for car window simulation
+ * The simulation has two interfaces:
+ * - WindowControl interface with the event window_control of type WindowCommand
+ * - WindowInfo interface with the event window_info of type WindowInfo
+ */
+package car_window_types namespace car_window_types {
+	
+	intern uint32 
+	intern uint16 
+	
+	// Enumerator that specifies the possible states of the car window
+	enum WindowState of uint32 {
+		Stopped = 0,
+		Opening = 1,
+		Closing = 2,
+		Open = 3,
+		Closed = 4,
+		Shutdown = 5
+	}
+
+	// Status and information structure of the car window
+	struct WindowInfo {
+		// Current state of the window
+		state of WindowState = Stopped
+		// Position of the window (0% = closed, 100% = open)
+		pos of uint32 = 0
+		// Last 5 positions of the window
+		lastpos of uint32[5] = 0
+	}
+
+	// Enumerator that specifies the possible commands to control the car window
+	enum WindowCommand of uint32 {
+		Stop = 0,
+		Open = 1,
+		Close = 2,
+		Exit = 3
+	}
+
+	// Control command structure for the car window
+	struct WindowControl {
+		// Command to control the window
+		command of WindowCommand = Stop
+	}
+
+	// Interface to control the car window simulation
+	interface WindowControl version "1.0"  {
+		// Event providing control commands for the window
+		event window_control of WindowControl
+		// Test event using an array of self defined type
+		event window_counter of MyU16Array
+	}
+
+	// Interface for car window status and information
+	interface WindowInfo version "1.0" {
+		// Event providing status information of the window
+		event window_info of WindowInfo
+	}
+	
+	// Type definition of an array of 10 uint16
+	typedef MyU16Array of MyU16[10]
+	
+	// Type definition of uint16 as MyU16
+	typedef MyU16 of uint16
+}

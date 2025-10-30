@@ -1,36 +1,27 @@
-namespaces: 
+namespaces:
   - name: car_window_types
-    description: Types for car window simulation
-
-    interfaces:
-      - name: CarWindowControl
-        id: /carwindow/WindowControl
-        description: Control Interface for the car window simulation
-        major_version: 1
-        minor_version: 0
-        events:
-          - name: window_control
-            datatype: WindowControl
-            description: "Event providing control commands for the window"
-
-      - name: CarWindowInfo
-        id: /carwindow/WindowInfo
-        description: Info Interface for the car window simulation
-        major_version: 1
-        minor_version: 0
-        events:
-          - name: window_info
-            datatype: WindowInfo
-            description: Event providing status information of the window
-          - name: counter
-            datatype: MyU16
-            description: Counter example using typedef
-
-
+    description: |-
+      Data types and interfaces for car window simulation
+      The simulation has two interfaces:
+      - WindowControl interface with the event window_control of type WindowCommand
+      - WindowInfo interface with the event window_info of type WindowInfo
     enumerations:
-      - name: WindowState
+      - name: WindowCommand
+        description: Enumerator that specifies the possible commands to control the
+          car window
         datatype: uint32
-        description: State of the car window
+        literals:
+          - name: Stop
+            value: 0
+          - name: Open
+            value: 1
+          - name: Close
+            value: 2
+          - name: Exit
+            value: 3
+      - name: WindowState
+        description: Enumerator that specifies the possible states of the car window
+        datatype: uint32
         literals:
           - name: Stopped
             value: 0
@@ -44,54 +35,57 @@ namespaces:
             value: 4
           - name: Shutdown
             value: 5
-
-      - name: WindowCommand
-        datatype: uint32
-        description: Commands for the car window
-        literals:
-          - name: Stop
-            value: 0
-          - name: Open
-            value: 1
-          - name: Close
-            value: 2
-          - name: Shutdown
-            value: 3
-
+    typedefs:
+      - name: MyU16
+        description: Type definition of uint16 as MyU16
+        datatype: uint16
+      - name: MyU16Array
+        description: Type definition of an array of 10 uint16
+        datatype: MyU16
+        arraysize: 10
     structs:
-
-      - name: WindowInfo
-        description: Status of the car window
-        members:
-          - name: state
-            datatype: WindowState
-            default: Stopped
-            description: Current state of the window
-          - name: pos
-            datatype: uint32
-            default: 0
-            description: Position of the window (0% = closed, 100% = open)
-          - name: lastpos
-            datatype: uint32
-            default: 0
-            description: Last 5 positions of the window
-            arraysize: 5
-
       - name: WindowControl
-        description: Control command for the car window
+        description: Control command structure for the car window
         members:
           - name: command
+            description: Command to control the window
             datatype: WindowCommand
             default: Stop
-            description: Command to control the window
-
-    typedefs:
-
-      - name: MyU16Array
-        description: array of 10 uint16
-        datatype: uint16
-        arraysize: 10
-    
-      - name: MyU16
-        description: 16-bit unsigned integer
-        datatype: uint16
+      - name: WindowInfo
+        description: Status and information structure of the car window
+        members:
+          - name: state
+            description: Current state of the window
+            datatype: WindowState
+            default: Stopped
+          - name: pos
+            description: Position of the window (0% = closed, 100% = open)
+            datatype: uint32
+            default: '0'
+          - name: lastpos
+            description: Last 5 positions of the window
+            datatype: uint32
+            arraysize: 5
+            default: '0'
+    interfaces:
+      - name: WindowControl
+        description: Interface to control the car window simulation
+        id: /car_window_types/WindowControl
+        major_version: 1
+        minor_version: 0
+        events:
+          - name: window_control
+            description: Event providing control commands for the window
+            datatype: WindowControl
+          - name: window_counter
+            description: Test event using an array of self defined type
+            datatype: MyU16Array
+      - name: WindowInfo
+        description: Interface for car window status and information
+        id: /car_window_types/WindowInfo
+        major_version: 1
+        minor_version: 0
+        events:
+          - name: window_info
+            description: Event providing status information of the window
+            datatype: WindowInfo

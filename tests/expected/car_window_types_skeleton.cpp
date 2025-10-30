@@ -13,16 +13,16 @@
 #include "car_window_types.h"
 #include "score/mw/com/impl/rust/bridge_macros.h"
 
-BEGIN_EXPORT_MW_COM_INTERFACE(car_window_types_CarWindowControl_interface, ::car_window_types::CarWindowControlProxy, ::car_window_types::CarWindowControlSkeleton)
-EXPORT_MW_COM_EVENT(car_window_types_CarWindowControl_interface, ::car_window_types::WindowControl, window_control)
+BEGIN_EXPORT_MW_COM_INTERFACE(car_window_types_WindowControl_interface, ::car_window_types::WindowControlProxy, ::car_window_types::WindowControlSkeleton)
+EXPORT_MW_COM_EVENT(car_window_types_WindowControl_interface, ::car_window_types::WindowControl, window_control)
+EXPORT_MW_COM_EVENT(car_window_types_WindowControl_interface, ::car_window_types::MyU16Array, window_counter)
 END_EXPORT_MW_COM_INTERFACE()
 
-BEGIN_EXPORT_MW_COM_INTERFACE(car_window_types_CarWindowInfo_interface, ::car_window_types::CarWindowInfoProxy, ::car_window_types::CarWindowInfoSkeleton)
-EXPORT_MW_COM_EVENT(car_window_types_CarWindowInfo_interface, ::car_window_types::WindowInfo, window_info)
-EXPORT_MW_COM_EVENT(car_window_types_CarWindowInfo_interface, ::car_window_types::MyU16, counter)
+BEGIN_EXPORT_MW_COM_INTERFACE(car_window_types_WindowInfo_interface, ::car_window_types::WindowInfoProxy, ::car_window_types::WindowInfoSkeleton)
+EXPORT_MW_COM_EVENT(car_window_types_WindowInfo_interface, ::car_window_types::WindowInfo, window_info)
 END_EXPORT_MW_COM_INTERFACE()
 
 
 EXPORT_MW_COM_TYPE(car_window_types_WindowControl_type, ::car_window_types::WindowControl)
+EXPORT_MW_COM_TYPE(car_window_types_MyU16Array_type, ::car_window_types::MyU16Array)
 EXPORT_MW_COM_TYPE(car_window_types_WindowInfo_type, ::car_window_types::WindowInfo)
-EXPORT_MW_COM_TYPE(car_window_types_MyU16_type, ::car_window_types::MyU16)
